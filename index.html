@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InstaBlink Partner demo prototype</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="ledger.css">
+  <link rel="stylesheet" href="demo-controls.css">
+  <link rel="stylesheet" href="zomaggy-theme.css">
+  <link rel="stylesheet" href="server-simulation.css">
+</head>
+<body>
+  <div class="demo-shell">
+    <aside class="facilitator" aria-label="Facilitator test-case panel">
+      <p class="kicker">Facilitator controls</p>
+      <h1>InstaBlink<br>Partner</h1>
+      <p class="intro">Choose a scenario, then let the delivery partner navigate the phone without explaining the intended outcome.</p>
+      <div class="scenario-list" role="group" aria-label="Test cases">
+        <button class="scenario active" data-scenario="rain"><span class="scenario-number">01</span><span><b>Rain and traffic</b><small>External conditions logged</small></span></button>
+        <button class="scenario" data-scenario="address"><span class="scenario-number">02</span><span><b>Cancelled after pickup</b><small>Journey payment review</small></span></button>
+        <button class="scenario" data-scenario="restaurant"><span class="scenario-number">03</span><span><b>Restaurant wait</b><small>Time separated fairly</small></span></button>
+      </div>
+      <p id="demo-status" class="demo-status">Selected: Rain and traffic</p>
+      <button id="start-selected" class="demo-primary">Run selected order</button>
+      <button id="open-ledger" class="demo-secondary">Open selected payment breakdown</button>
+      <div class="test-prompt"><b>Ask after the flow</b><p>“What do you think happened to your money and the time you spent?”</p></div>
+      <button id="reset" class="reset">Reset current case</button>
+      <p class="prototype-note">Demonstration only. Route, weather and payout data are simulated.</p>
+    </aside>
+
+    <main class="phone-wrap">
+      <div class="android-phone" aria-label="Delivery partner Android app prototype">
+        <div class="speaker"></div><div class="camera"></div>
+        <div class="app-top"><div class="brand-mark">I</div><div><b>InstaBlink</b><small>Partner</small></div><span class="online"><i></i> Online</span></div>
+        <section id="home" class="screen active">
+          <div class="map" aria-label="Mock delivery route map">
+            <div class="map-road road-one"></div><div class="map-road road-two"></div><div class="map-road road-three"></div>
+            <div class="map-block block-one"></div><div class="map-block block-two"></div><div class="map-block block-three"></div>
+            <div class="route route-rain"></div><div class="route route-address"></div>
+            <span class="map-label store-label">Instamart<br>pickup</span><span class="pin store-pin">●</span><span class="pin rider-pin">➤</span><span class="pin home-pin">⌂</span>
+            <div id="map-badge" class="map-badge">Heavy rain on route</div>
+          </div>
+          <div class="trip-sheet">
+            <div class="handle"></div><div class="trip-top"><span id="trip-state">New order assigned</span><b id="trip-delay">Pickup by 6:35 pm</b></div>
+            <div class="trip-steps" aria-label="Order progress"><i class="is-now"></i><i></i><i></i><i></i><span>Assigned</span><span>Pickup</span><span>Route</span><span>Paid</span></div>
+            <h2 id="customer-name">Meera · Andheri East</h2><p id="scenario-description">Collect the order from Instamart pickup.</p>
+            <div class="trip-facts"><div><small>Kitchen wait</small><b id="kitchen-time">—</b></div><div><small>Road time</small><b id="road-time">—</b></div><div><small>ETA</small><b id="eta-time">7:00 pm</b></div></div>
+            <button id="report-delay" class="primary">Start order scenario</button>
+          </div>
+        </section>
+
+        <section id="cause" class="screen screen-pad">
+          <button class="back" data-back="earnings">‹ Back to earnings</button><p class="section-label">ORDER RECORD CHECK</p><h2>What does this record miss?</h2><p id="cause-helper" class="muted">Select every factor that affected this order. More than one may apply.</p>
+          <div class="cause-grid"><button data-cause="Restaurant delay">🍽️<span>Restaurant waited</span></button><button data-cause="Customer issue">⌖<span>Wrong address or customer issue</span></button><button data-cause="Traffic">▰<span>Traffic or road closure</span></button><button data-cause="Weather">☂<span>Rain or weather</span></button><button data-cause="App routing">⌘<span>App routing issue</span></button></div>
+          <button id="continue" class="primary" disabled>Check my delivery</button>
+        </section>
+        <section id="earnings" class="screen screen-pad earnings-screen">
+          <button class="back" data-back="home">‹ Back to this order</button><p class="section-label">SIMULATED ORDER PAYOUT</p><h2>This order's earnings</h2><p id="earnings-context" class="muted">A clear record of what the order paid for.</p>
+          <div class="earning-total"><small id="total-label">Rider transfer for this order</small><b>₹<span id="earnings-total">—</span></b><span id="total-status">Select a scenario</span></div><div id="earning-lines" class="earning-lines"></div>
+          <div id="earnings-alert" class="earnings-alert"><b>Calculation source</b><p>The app records the event and applies the rider share automatically.</p></div><button class="primary restart">Back to orders</button>
+        </section>
+        <section id="deliveries" class="screen screen-pad deliveries-screen">
+          <button class="back" data-back="home">‹ Back to active order</button><p class="section-label">YOUR DELIVERIES</p><h2>Order earnings</h2><p class="muted">Open any order again to see the rate, the external event, and what was transferred to you.</p>
+          <button id="current-delivery" class="delivery-row current"><span class="delivery-icon">⌖</span><span><b id="delivery-customer">Selected order</b><small id="delivery-event">Open to see the payment calculation</small></span><span class="delivery-amount"><b>₹<span id="delivery-amount">—</span></b><small id="delivery-status">Select a scenario</small></span></button>
+          <div class="delivery-row past"><span class="delivery-icon muted-icon">⌖</span><span><b>Order #QC-4819</b><small>Completed earlier today</small></span><span class="delivery-amount"><b>₹42</b><small>Transferred</small></span></div>
+          <div class="delivery-row past"><span class="delivery-icon muted-icon">⌖</span><span><b>Order #QC-4815</b><small>Completed earlier today</small></span><span class="delivery-amount"><b>₹31</b><small>Transferred</small></span></div>
+        </section>
+
+        <section id="checking" class="screen screen-center"><div class="spinner"></div><p class="section-label">FairRoute Shield</p><h2>Checking your delivery record</h2><p id="checking-copy" class="muted">Comparing your tag with route, weather and order timing.</p><div class="checking-list" id="checking-list"></div></section>
+
+        <section id="protected" class="screen screen-pad outcome"><div class="outcome-icon approved">✓</div><p class="section-label approved-text">EXTERNAL CAUSE CONFIRMED</p><h2>Your work has been recorded fairly</h2><p id="protected-copy" class="muted"></p><div class="result-card"><div><small>Rider-accountable time</small><b id="accountable-time">18 min</b></div><div><small>External time logged</small><b id="external-time">11 min</b></div></div><details><summary>What did FairRoute check?</summary><p id="explanation"></p></details><button class="primary view-earnings">View order earnings</button></section>
+
+        <section id="unclear" class="screen screen-pad outcome"><div class="outcome-icon pending">!</div><p class="section-label pending-text">NYAY DESK REVIEW</p><h2>You flagged a problem with this order record</h2><p class="muted">We have kept the calculated rider transfer visible while we compare your explanation with the route and order record.</p><div class="pending-card"><small>Calculated rider transfer</small><b>₹<span id="available-value">35</span></b><span>Record review in progress</span></div><button id="voice-start" class="primary">Record a 10-second voice note</button><button class="text-link view-earnings">See earnings breakup</button></section>
+
+        <section id="recording" class="screen screen-pad record-screen"><button class="back" data-back="unclear">‹ Back</button><p class="section-label pending-text">NYAY DESK</p><h2>Tell us what happened</h2><p class="muted">Speak in your own words. You have up to ten seconds.</p><div id="timer" class="timer">0:10</div><p id="recording-status" class="recording-status">Tap to start recording</p><button id="record-toggle" class="record-button" aria-label="Start recording">●</button><button id="submit-note" class="primary" disabled>Send for review</button></section>
+
+        <section id="submitted" class="screen screen-pad outcome"><div class="outcome-icon approved">✓</div><p class="section-label approved-text">SENT TO NYAY DESK</p><h2>Your explanation is on record</h2><p class="muted">We will show whether the ₹<span id="submitted-value">35</span> rider transfer or the route record needs correction, with the reason and appeal option.</p><div class="review-track"><p><b>Now</b> Voice note received</p><p><b>Next</b> Review route and order record</p><p><b>Then</b> Show the corrected decision and appeal option</p></div><button class="primary view-earnings">View earnings breakup</button></section>
+        <nav><button id="orders-nav" class="nav-current">⌂<span>Orders</span></button><button id="earnings-nav">₹<span>Earnings</span></button><button>☰<span>Support</span></button></nav>
+      </div>
+    </main>
+    <aside class="server-simulation" aria-label="Simulated backend decision process">
+      <div class="server-heading"><span class="server-pulse" aria-hidden="true"></span><div><p class="kicker">Behind the scenes</p><h2>FairDelay server</h2></div><span class="server-mode">SIMULATION</span></div>
+      <p id="server-summary" class="server-summary">Awaiting a delivery scenario. No deduction is applied by default.</p>
+      <section class="server-inputs" aria-label="Event data received by the server"><p class="server-label">EVENT PACKET</p><div class="server-data"><span>Order</span><b id="server-order">QC-DEMO-RAIN</b></div><div class="server-data"><span>Signals</span><b id="server-signals">Weather API · route GPS</b></div><div class="server-data"><span>Rider tag</span><b id="server-tag">Not submitted</b></div></section>
+      <section class="server-trace" aria-label="Decision steps from Deliverable 4"><p class="server-label">DECISION TRACE · DELIVERABLE 4</p><ol><li id="server-step-order"><i>1</i><div><b>Capture order events</b><small>Order timestamps and cancellation status</small></div><span class="trace-state">Queued</span></li><li id="server-step-clocks"><i>2</i><div><b>Split the two clocks</b><small>Kitchen wait vs. rider-accountable road time</small></div><span class="trace-state">Waiting</span></li><li id="server-step-check"><i>3</i><div><b>Cross-check the cause</b><small>GPS, traffic, weather and order data</small></div><span class="trace-state">Waiting</span></li><li id="server-step-rule"><i>4</i><div><b>Apply the default rule</b><small>No deduction unless rider-caused delay is evidenced</small></div><span class="trace-state">Waiting</span></li><li id="server-step-ledger"><i>5</i><div><b>Write the payout ledger</b><small>Original rate, adjustment and rider transfer</small></div><span class="trace-state">Waiting</span></li><li id="server-step-nyay"><i>6</i><div><b>Route unresolved case</b><small>Hold as pending; Nyay Desk voice-note review</small></div><span class="trace-state">Not needed</span></li></ol></section>
+      <section class="server-result" aria-live="polite"><div><span>PAYMENT STATE</span><b id="server-result">Ready to simulate</b></div><span id="server-ledger-chip" class="ledger-chip">No payout posted</span></section>
+      <p class="server-footnote">Prototype view only: sample data simulates the proposed back-end script in Deliverable 4; it is not a live platform system.</p>
+    </aside>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
